@@ -124,8 +124,17 @@ del modelo, no los valores.
 - **Sus niveles son los que determinan la Etapa** de la partida (Aldea /
   Villa / Ciudad / Reino) — ver 4.4. Es, en la práctica, el "medidor de
   progreso" central del juego.
-- **Abierto**: nombre del edificio (propuesta provisional: "Ayuntamiento",
-  cámbialo si no encaja con el tema de Dawnasty).
+- **Nombre (cerrado): evoluciona con la etapa.** Es el mismo edificio
+  (mismo nivel, misma función, mismo modelo de datos) pero el nombre/arte
+  que se le muestra al jugador cambia según en qué rango de nivel esté —
+  es solo texto de UI derivado de la etapa, no un cambio de modelo:
+
+  | Etapa | Nombre del Edificio Principal |
+  |---|---|
+  | Aldea | Choza del Fundador |
+  | Villa | Salón del Clan |
+  | Ciudad | Casa Solariega |
+  | Reino | Trono de la Dinastía |
 
 **Resto de edificios (propuesta inicial, por etapa — sin cerrar):**
 
@@ -136,12 +145,19 @@ del modelo, no los valores.
 | Ciudad | Mercado (conversión/comercio de recursos) |
 | Reino | Por definir — probablemente ligado al sistema de prestigio |
 
-### 4.4 Etapas: Aldea → Villa → Ciudad → Reino (cerrado el mecanismo)
+### 4.4 Etapas: Aldea → Villa → Ciudad → Reino (cerrado el mecanismo, abierto el número de etapas)
 
-- Las 4 etapas son, literalmente, **rangos de nivel del Edificio
-  Principal** (p. ej. niveles 1-9 = Aldea, 10-24 = Villa... los cortes
-  exactos son números de balance, pendientes). No es un concepto
-  independiente que haya que trackear aparte.
+- Las etapas son, literalmente, **rangos de nivel del Edificio Principal**
+  (p. ej. niveles 1-9 = Aldea, 10-24 = Villa... los cortes exactos son
+  números de balance, pendientes). No es un concepto independiente que
+  haya que trackear aparte.
+- **Abierto: cuántas etapas hay.** Aldea/Villa/Ciudad/Reino (4) es la
+  lista de trabajo usada en este documento para razonar sobre el resto de
+  sistemas, pero el número final de etapas **no está cerrado** — podrían
+  ser más (etapas intermedias) o menos. Cualquier mención a estas 4 etapas
+  concretas en el resto del documento (tabla de edificios en 4.3, nombres
+  del Edificio Principal en 4.3, pilares en 2, pitch en 1) es igual de
+  provisional que esta lista, no una lista cerrada de 4.
 - Cada etapa desbloquea los edificios/recursos/oficios de la tabla de 4.3
   asociados a ella.
 - Si un edificio necesita una condición de desbloqueo más fina que "estar
@@ -190,11 +206,14 @@ del modelo, no los valores.
 
 ## 6. Preguntas abiertas para próximas iteraciones
 
-- Nombre del Edificio Principal (4.3).
 - Lista definitiva de recursos y qué edificios, además de la Granja,
   producen comida (4.2).
 - Lista definitiva de edificios por etapa (4.3) — la tabla es un borrador
   para reaccionar, no una lista cerrada.
+- **Número final de etapas** (4.4): se está trabajando con 4
+  (Aldea/Villa/Ciudad/Reino) como lista provisional, pero no está cerrado
+  cuántas habrá realmente. Afecta a la tabla de edificios (4.3) y a los
+  nombres del Edificio Principal (4.3), que habrá que revisar si cambia.
 - Cortes exactos de nivel del Edificio Principal para cada etapa (4.4).
 - Fórmula de Puntos de Dinastía ganados por run, contenido del árbol de
   nodos (qué nodos, costes, prerequisitos) y hito exacto para poder
