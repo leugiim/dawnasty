@@ -24,3 +24,9 @@ Reglas que no tienen excepción:
 - Ningún `id` se genera en el backend, nunca.
 - Los ids son **UUID v7** (no v4): secuenciales por timestamp. La
   validación del VO de id comprueba también que la versión sea 7.
+- Los controllers no construyen la `Response` de éxito/error a mano: 
+  devuelven un `ApiResult`/`ApiResultList` (envuelto en `{"data": ...}` por
+  el listener de `kernel.view`, `200`) o `void` (`204`), y lanzan
+  excepciones que implementan `ApiException`/`ApiValidationException` para
+  los errores (envueltas en `{"message", "errors"}` por el listener de
+  `kernel.exception`). Ver sección 7 de `docs/architecture.md`.

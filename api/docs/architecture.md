@@ -377,7 +377,113 @@ id generado por el servidor, y con v7 además se gana orden temporal e
 
 ---
 
-## 7. Checklist para un caso de uso nuevo
+## 7. Formato de respuesta HTTP estándar
+
+Todas las respuestas JSON de la API siguen un sobre (envelope) estándar,
+aplicado automáticamente por dos listeners de `_Shared/Infrastructure/Symfony/EventListener/`
+— los controllers no lo construyen a mano.
+
+**Éxito**, cuando hay datos que devolver:
+
+```json
+{ "data": { "id": "...", "name": "..." } }
+```
+
+**Éxito sin contenido** (`void`): `204 No Content`, sin cuerpo.
+
+**Error** (cualquier excepción no capturada llega aquí):
+
+```json
+{ "message": "Player not found", "errors": null }
+```
+
+`errors` solo aparece relleno en errores de validación con detalle por
+campo; el resto de errores solo llevan `message`.
+
+### `ApiResult` (`_Shared/Domain/ApiResult.php`)
+
+Interfaz con un único método: `toPrimitives(): array`. Es PHP puro, sin
+ninguna dependencia de framework, así que tanto DTOs de `Application/`
+(los `*View` que ya devuelven las Query) como, si hiciera falta, clases de
+`Domain/`, pueden implementarla sin romper la dirección de dependencias.
+Cualquier controller puede devolver directamente un objeto que la
+implemente, en vez de construir una `Response`:
+
+```php
+#[Route('/api/players/{id}', methods: ['GET'])]
+public function get(string $id, MessageBusInterface $queryBus): ApiResult
+{
+    $envelope = $queryBus->dispatch(new GetPlayerQuery($id));
+
+    return $envelope->last(HandledStamp::class)->getResult(); // PlayerView implements ApiResult
+}
+```
+
+### `ApiResultList` (`_Shared/Domain/ApiResultList.php`)
+
+Implementa `ApiResult`. Se construye con un iterable de `ApiResult` y su
+`toPrimitives()` es simplemente el `array_map` de `toPrimitives()` sobre
+cada elemento. Para devolver una lista, un controller solo necesita:
+
+```php
+return new ApiResultList($players); // $players es iterable<PlayerView>
+```
+
+### Listener de respuesta (`kernel.view`)
+
+Se dispara solo cuando el controller **no** ha devuelto ya una `Response`
+(comportamiento estándar de Symfony, así que si un caso concreto realmente
+necesita construir la `Response` a mano, puede seguir haciéndolo y el
+listener no interfiere):
+
+- Controller devuelve algo que implementa `ApiResult` → `200` con
+  `{"data": $result->toPrimitives()}`.
+- Controller devuelve `void`/`null` → `204` sin cuerpo.
+
+Por defecto, un `Command` que crea un recurso no devuelve nada (el
+`CommandHandler` es `void`) y su controller también, así que la creación
+responde `204` — el cliente ya tiene todo lo que necesita, porque el id lo
+generó él mismo (sección 6) y el resto de datos ya los envió en el propio
+request. Si un caso de uso concreto de creación necesita devolver algo que
+el cliente no tenía (calculado por el servidor), el `CommandHandler` puede
+devolver un DTO/`*View` en vez de `void`, y su controller lo propaga para
+que el listener responda `200` con `data` en lugar de `204`. Es una
+decisión por caso de uso, no una regla global.
+
+### `ApiException` (`_Shared/Domain/ApiException.php`)
+
+Interfaz para que una excepción declare su propio código HTTP sin acoplar
+`Domain/`/`Application/` a Symfony:
+
+```php
+interface ApiException extends \Throwable
+{
+    public function statusCode(): int;
+}
+```
+
+Las excepciones de dominio que representen un error "esperado" del negocio
+(`PlayerNotFoundException`, `InvalidUuidFormatException`, ...) la
+implementan y declaran su código (`404`, `400`, ...). Para errores de
+validación con detalle por campo, se implementa además
+`ApiValidationException extends ApiException` que añade
+`errors(): array<string, string>`.
+
+### Listener de excepciones (`kernel.exception`)
+
+Captura cualquier excepción y la convierte en el JSON de error:
+
+- Implementa `ApiValidationException` → usa su `statusCode()`, su
+  `getMessage()` como `message`, y su `errors()` como `errors`.
+- Implementa `ApiException` (sin ser de validación) → usa su
+  `statusCode()` y `getMessage()` como `message`, `errors: null`.
+- Cualquier otra excepción (un bug, un error de infraestructura, ...) →
+  `500`, `message` genérico (no se filtra el mensaje real al cliente), y
+  se loguea la excepción original completa para poder depurarla.
+
+---
+
+## 8. Checklist para un caso de uso nuevo
 
 1. ¿Es un módulo nuevo o entra en uno existente? Aplica el criterio de la
    sección 1.1. Si es nuevo, crea `src/<Modulo>/{Domain,Application,Infrastructure/{Doctrine,Symfony}}`.
@@ -391,14 +497,20 @@ id generado por el servidor, y con v7 además se gana orden temporal e
    el Command + Handler (`#[AsMessageHandler(bus: 'command.bus')]`).
    ¿Es una lectura? Crea `<Modulo>/Application/Query/<CasoDeUso>/` con el
    Query + Handler (`#[AsMessageHandler(bus: 'query.bus')]`) devolviendo un
-   `*View`.
+   `*View` que implemente `ApiResult`.
 5. ¿El caso de uso produce algo relevante para el resto del sistema?
    Define el evento en `<Modulo>/Domain/Event/`, regístralo en el agregado
    con `record(...)`, despáchalo desde el `CommandHandler` tras persistir, y
    añade los `Application/EventHandler/<Evento>/` que reaccionen (en este
    módulo o en otro).
-6. Expón el caso de uso vía HTTP: controller delgado en
+6. ¿Puede fallar de una forma que el cliente deba distinguir (no
+   encontrado, inválido, ...)? Lanza una excepción de dominio que
+   implemente `ApiException` (o `ApiValidationException` si lleva detalle
+   por campo) en vez de devolver `null`/`false` o construir una `Response`
+   de error a mano.
+7. Expón el caso de uso vía HTTP: controller delgado en
    `<Modulo>/Infrastructure/Symfony/Controller/`, que solo parsea, despacha
-   al bus, y devuelve la respuesta.
-7. ¿Hay un id nuevo de por medio? Viene del cliente. No lo generes en el
+   al bus, y devuelve el `ApiResult`/`ApiResultList`/`void` resultante — ver
+   sección 7 para el formato de respuesta.
+8. ¿Hay un id nuevo de por medio? Viene del cliente. No lo generes en el
    backend en ningún punto de este flujo.

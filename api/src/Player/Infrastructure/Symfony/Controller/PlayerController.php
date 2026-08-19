@@ -4,94 +4,50 @@ declare(strict_types=1);
 
 namespace App\Player\Infrastructure\Symfony\Controller;
 
+use App\_Shared\Domain\ApiResult;
 use App\Player\Application\Command\CreatePlayer\CreatePlayerCommand;
 use App\Player\Application\Query\GetPlayer\GetPlayerQuery;
-use App\Player\Application\Query\GetPlayer\PlayerView;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\Constraints\Uuid;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * Controller delgado: solo parsea el request, despacha al bus correspondiente
- * y mapea el resultado a una Response. Sin lógica de negocio.
+ * y devuelve el ApiResult/void resultante. Sin lógica de negocio ni
+ * construcción manual de Response de éxito/error (ver docs/architecture.md,
+ * sección 7): el listener de kernel.view construye el 200/204 de éxito y el
+ * de kernel.exception construye el error a partir de las excepciones de
+ * dominio que implementan ApiException.
  */
 final class PlayerController
 {
     public function __construct(
         private readonly MessageBusInterface $commandBus,
         private readonly MessageBusInterface $queryBus,
-        private readonly ValidatorInterface $validator,
     ) {
     }
 
     #[Route('/api/players', name: 'api_players_create', methods: ['POST'])]
-    public function create(Request $request): Response
+    public function create(Request $request): void
     {
         $payload = json_decode($request->getContent(), true) ?? [];
 
         $id = is_string($payload['id'] ?? null) ? $payload['id'] : '';
         $name = is_string($payload['name'] ?? null) ? $payload['name'] : '';
 
-        $violations = $this->validator->validate($id, [
-            new Assert\NotBlank(),
-            new Assert\Uuid(versions: [Uuid::V7_MONOTONIC]),
-        ]);
-
-        if (count($violations) > 0 || $name === '') {
-            return new JsonResponse([
-                'error' => [
-                    'message' => 'Validation failed',
-                    'code' => 'VALIDATION_ERROR',
-                    'details' => [
-                        'id' => count($violations) > 0 ? ['id must be a valid UUID v7'] : [],
-                        'name' => $name === '' ? ['name is required'] : [],
-                    ],
-                ],
-            ], Response::HTTP_BAD_REQUEST);
-        }
-
         $this->commandBus->dispatch(new CreatePlayerCommand(
             id: $id, // GUID (UUID v7) generado en el frontend
             name: $name,
         ));
-
-        return new JsonResponse(null, Response::HTTP_CREATED);
     }
 
     #[Route('/api/players/{id}', name: 'api_players_get', methods: ['GET'])]
-    public function get(string $id): Response
+    public function get(string $id): ApiResult
     {
-        try {
-            $envelope = $this->queryBus->dispatch(new GetPlayerQuery(id: $id));
-        } catch (HandlerFailedException) {
-            // id con formato inválido -> se trata como "no encontrado".
-            return $this->notFound();
-        }
+        $envelope = $this->queryBus->dispatch(new GetPlayerQuery(id: $id));
 
-        /** @var PlayerView|null $view */
-        $view = $envelope->last(HandledStamp::class)?->getResult();
-
-        if ($view === null) {
-            return $this->notFound();
-        }
-
-        return new JsonResponse($view);
-    }
-
-    private function notFound(): JsonResponse
-    {
-        return new JsonResponse([
-            'error' => [
-                'message' => 'Player not found',
-                'code' => 'PLAYER_NOT_FOUND',
-            ],
-        ], Response::HTTP_NOT_FOUND);
+        /** @var ApiResult */
+        return $envelope->last(HandledStamp::class)->getResult();
     }
 }
