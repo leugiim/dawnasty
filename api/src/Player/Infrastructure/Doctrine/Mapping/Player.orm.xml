@@ -4,7 +4,7 @@
                    xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
                    https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
-    <entity name="App\Domain\Player\Player" table="players">
+    <entity name="App\Player\Domain\Player" table="players">
         <id name="id" type="guid" column="id">
             <generator strategy="NONE"/>
         </id>

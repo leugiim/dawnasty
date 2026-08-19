@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Query\GetPlayer;
+namespace App\Player\Application\Query\GetPlayer;
 
 final readonly class GetPlayerQuery
 {

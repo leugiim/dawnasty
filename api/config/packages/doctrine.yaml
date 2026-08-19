@@ -15,14 +15,14 @@ doctrine:
         auto_mapping: false
         mappings:
             # Cada módulo de Domain/ registra su propio mapping XML, ubicado en
-            # Infrastructure/Doctrine/Mapping/ (docs/architecture.md, sección 4.1).
-            # El "prefix" es el namespace del módulo, para que "Player.orm.xml"
-            # resuelva a la clase App\Domain\Player\Player.
+            # <Modulo>/Infrastructure/Doctrine/Mapping/ (docs/architecture.md,
+            # sección 4.1). El "prefix" es el namespace del Domain/ del módulo,
+            # para que "Player.orm.xml" resuelva a la clase App\Player\Domain\Player.
             Player:
                 type: xml
                 is_bundle: false
-                dir: '%kernel.project_dir%/src/Infrastructure/Doctrine/Mapping'
-                prefix: 'App\Domain\Player'
+                dir: '%kernel.project_dir%/src/Player/Infrastructure/Doctrine/Mapping'
+                prefix: 'App\Player\Domain'
                 alias: Player
 
 when@test:

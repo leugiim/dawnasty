@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Player;
+namespace App\Player\Domain;
 
-use App\Domain\Player\Event\PlayerWasCreated;
-use App\Domain\Shared\Event\RecordsDomainEvents;
+use App\Player\Domain\Event\PlayerWasCreated;
+use App\_Shared\Domain\Event\RecordsDomainEvents;
 
 /**
  * Aggregate root del módulo Player.

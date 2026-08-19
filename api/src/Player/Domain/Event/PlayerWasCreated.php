@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Player\Event;
+namespace App\Player\Domain\Event;
 
-use App\Domain\Player\PlayerId;
-use App\Domain\Shared\Event\DomainEvent;
+use App\Player\Domain\PlayerId;
+use App\_Shared\Domain\Event\DomainEvent;
 
 final readonly class PlayerWasCreated implements DomainEvent
 {

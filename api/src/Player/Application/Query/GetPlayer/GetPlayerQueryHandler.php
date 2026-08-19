@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Query\GetPlayer;
+namespace App\Player\Application\Query\GetPlayer;
 
-use App\Domain\Player\PlayerId;
-use App\Domain\Player\PlayerRepositoryInterface;
+use App\Player\Domain\PlayerId;
+use App\Player\Domain\PlayerRepositoryInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler(bus: 'query.bus')]

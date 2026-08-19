@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Symfony\Controller;
+namespace App\Player\Infrastructure\Symfony\Controller;
 
-use App\Application\Command\CreatePlayer\CreatePlayerCommand;
-use App\Application\Query\GetPlayer\GetPlayerQuery;
-use App\Application\Query\GetPlayer\PlayerView;
+use App\Player\Application\Command\CreatePlayer\CreatePlayerCommand;
+use App\Player\Application\Query\GetPlayer\GetPlayerQuery;
+use App\Player\Application\Query\GetPlayer\PlayerView;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,6 +15,7 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Constraints\Uuid;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
@@ -40,7 +41,7 @@ final class PlayerController
 
         $violations = $this->validator->validate($id, [
             new Assert\NotBlank(),
-            new Assert\Uuid(),
+            new Assert\Uuid(versions: [Uuid::V7_MONOTONIC]),
         ]);
 
         if (count($violations) > 0 || $name === '') {
@@ -49,7 +50,7 @@ final class PlayerController
                     'message' => 'Validation failed',
                     'code' => 'VALIDATION_ERROR',
                     'details' => [
-                        'id' => count($violations) > 0 ? ['id must be a valid UUID v4'] : [],
+                        'id' => count($violations) > 0 ? ['id must be a valid UUID v7'] : [],
                         'name' => $name === '' ? ['name is required'] : [],
                     ],
                 ],
@@ -57,7 +58,7 @@ final class PlayerController
         }
 
         $this->commandBus->dispatch(new CreatePlayerCommand(
-            id: $id, // GUID generado en el frontend
+            id: $id, // GUID (UUID v7) generado en el frontend
             name: $name,
         ));
 

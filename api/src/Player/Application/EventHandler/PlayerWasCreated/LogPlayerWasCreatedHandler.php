@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Application\EventHandler\PlayerWasCreated;
+namespace App\Player\Application\EventHandler\PlayerWasCreated;
 
-use App\Domain\Player\Event\PlayerWasCreated;
+use App\Player\Domain\Event\PlayerWasCreated;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 

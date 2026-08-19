@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Doctrine\Repository;
+namespace App\Player\Infrastructure\Doctrine\Repository;
 
-use App\Domain\Player\Player;
-use App\Domain\Player\PlayerId;
-use App\Domain\Player\PlayerRepositoryInterface;
+use App\Player\Domain\Player;
+use App\Player\Domain\PlayerId;
+use App\Player\Domain\PlayerRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Shared\Event;
+namespace App\_Shared\Domain\Event;
 
 /**
  * Trait para agregados que necesitan publicar eventos de dominio. Guarda los

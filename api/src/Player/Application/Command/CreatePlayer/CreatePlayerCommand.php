@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Command\CreatePlayer;
+namespace App\Player\Application\Command\CreatePlayer;
 
 final readonly class CreatePlayerCommand
 {

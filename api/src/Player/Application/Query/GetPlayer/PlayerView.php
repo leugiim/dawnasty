@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Query\GetPlayer;
+namespace App\Player\Application\Query\GetPlayer;
 
-use App\Domain\Player\Player;
+use App\Player\Domain\Player;
 
 /**
  * Read model de salida para Player. Nunca se expone la entidad de dominio

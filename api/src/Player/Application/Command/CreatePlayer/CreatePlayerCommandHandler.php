@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Command\CreatePlayer;
+namespace App\Player\Application\Command\CreatePlayer;
 
-use App\Domain\Player\Player;
-use App\Domain\Player\PlayerId;
-use App\Domain\Player\PlayerRepositoryInterface;
+use App\Player\Domain\Player;
+use App\Player\Domain\PlayerId;
+use App\Player\Domain\PlayerRepositoryInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Messenger\MessageBusInterface;
 

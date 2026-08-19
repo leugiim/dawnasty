@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Shared\Event;
+namespace App\_Shared\Domain\Event;
 
 /**
  * Interfaz marcadora para los eventos de dominio. No añade comportamiento:

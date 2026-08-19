@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Player;
+namespace App\Player\Domain;
 
-use App\Domain\Shared\ValueObject\Id;
+use App\_Shared\Domain\ValueObject\Id;
 
 final class PlayerId extends Id
 {
