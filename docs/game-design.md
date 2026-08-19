@@ -237,6 +237,6 @@ lo convertimos en tareas concretas:
   cuando toque implementarlo.
 - En `app/`, la UI correspondiente para ese sistema.
 
-No implementamos nada de esto todavía — primero cerramos el diseño del
-primer sistema (probablemente **población y vivienda**, por ser la base de
-todo lo demás) y de ahí sale la primera tanda de tareas reales.
+El backlog vivo derivado de este documento está en
+[`tasks.md`](tasks.md), separado en backend/frontend, con el orden
+sugerido para la primera vuelta de implementación.
