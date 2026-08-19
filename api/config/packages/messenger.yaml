@@ -1,0 +1,10 @@
+framework:
+    messenger:
+        # Los 3 buses de la arquitectura hexagonal (ver docs/architecture.md, sección 5).
+        # Todos síncronos (sin transporte): se comportan como un bus en memoria.
+        default_bus: command.bus
+
+        buses:
+            command.bus: []
+            query.bus: []
+            event.bus: []

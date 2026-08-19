@@ -1,0 +1,9 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.idea/
+
+# Each project (api/, app/) keeps its own .gitignore for
+# vendor/, node_modules/, build output, .env.local, etc.
