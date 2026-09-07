@@ -24,6 +24,12 @@ doctrine:
                 dir: '%kernel.project_dir%/src/Player/Infrastructure/Doctrine/Mapping'
                 prefix: 'App\Player\Domain'
                 alias: Player
+            Village:
+                type: xml
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/Village/Infrastructure/Doctrine/Mapping'
+                prefix: 'App\Village\Domain'
+                alias: Village
 
 when@test:
     doctrine:

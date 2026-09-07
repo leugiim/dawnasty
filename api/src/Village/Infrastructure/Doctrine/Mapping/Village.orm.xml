@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                   https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="App\Village\Domain\Village" table="villages">
+        <id name="id" type="guid" column="id">
+            <generator strategy="NONE"/>
+        </id>
+
+        <!--
+            buildings/resources como JSON: placeholder mientras no exista un
+            catálogo de edificios propio (módulo Building, docs/tasks.md,
+            "Orden sugerido" paso 5). Cuando llegue, "buildings" es
+            candidato a pasar a una tabla/colección propia; de momento es
+            solo un mapa tipo => nivel/cantidad, sin relaciones que lo
+            justifiquen.
+        -->
+        <field name="buildings" type="json" column="buildings" nullable="false"/>
+        <field name="resources" type="json" column="resources" nullable="false"/>
+
+        <field name="populationTotal" type="integer" column="population_total" nullable="false"/>
+        <field name="populationUnemployed" type="integer" column="population_unemployed" nullable="false"/>
+
+        <field name="lastCalculatedAt" type="datetime_immutable" column="last_calculated_at" nullable="false"/>
+    </entity>
+</doctrine-mapping>

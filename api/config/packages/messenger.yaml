@@ -7,4 +7,11 @@ framework:
         buses:
             command.bus: []
             query.bus: []
-            event.bus: []
+            # A diferencia de command.bus/query.bus (siempre exactamente un
+            # handler), un evento de dominio puede no tener ningún listener
+            # todavía (docs/architecture.md, sección 5: "un evento puede
+            # tener 0, 1 o varios handlers") — allow_no_handlers evita que
+            # Messenger lance NoHandlerForMessageException en ese caso.
+            event.bus:
+                default_middleware:
+                    allow_no_handlers: true
