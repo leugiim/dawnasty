@@ -514,3 +514,50 @@ Captura cualquier excepción y la convierte en el JSON de error:
    sección 7 para el formato de respuesta.
 8. ¿Hay un id nuevo de por medio? Viene del cliente. No lo generes en el
    backend en ningún punto de este flujo.
+
+---
+
+## 9. Tests
+
+`tests/` espeja la misma estructura de módulos que `src/` (namespace
+`App\Tests\<Modulo>\...`). Dos tipos de test, según la capa:
+
+- **Unitarios** (`tests/<Modulo>/Domain/`, `tests/<Modulo>/Application/`):
+  `PHPUnit\Framework\TestCase` normal, sin kernel ni base de datos.
+  - `Domain/`: prueban el aggregate/VOs/enums directamente (PHP puro, sin
+    mocks — no hay nada de framework que mockear).
+  - `Application/`: prueban el Command/QueryHandler con un repositorio en
+    memoria (`tests/<Modulo>/Application/InMemory<Modulo>Repository.php`,
+    implementa la interfaz de `Domain/`) en vez de Doctrine, y un stub/mock
+    de `MessageBusInterface` para el `event.bus` cuando el handler publica
+    eventos. Si el caso de uso depende de la hora (`ClockInterface`), se le
+    pasa un `Symfony\Component\Clock\MockClock` con una fecha fija.
+- **E2E** (`tests/<Modulo>/Infrastructure/Symfony/Controller/`): extienden
+  `Symfony\Bundle\FrameworkBundle\Test\WebTestCase`, pegan sobre las rutas
+  HTTP reales (`$client->request(...)`) y sí tocan Doctrine/base de datos
+  de verdad — la de test (ver más abajo). Cubren el contrato HTTP completo:
+  el envelope de éxito/error (sección 7), los códigos de estado, y que el
+  caso de uso funciona con la implementación real del repositorio, no solo
+  con el doble en memoria.
+
+### Base de datos de test
+
+El proyecto usa SQLite (`api/README.md`). El `dbname_suffix` que trae por
+defecto la receta de Symfony para `when@test` en `doctrine.yaml` **no
+tiene ningún efecto** sobre una conexión SQLite basada en `path` (solo
+aplica al parámetro `dbname` de MySQL/Postgres) — por eso `.env.test` fija
+su propio `DATABASE_URL` apuntando a `var/test.db`, un fichero SQLite
+distinto del de desarrollo (`var/data.db`), en vez de depender de
+`dbname_suffix`.
+
+Antes de correr los tests hay que aplicarle las migraciones (una vez, o
+cada vez que haya migraciones nuevas):
+
+```bash
+composer test   # migra var/test.db y corre bin/phpunit
+```
+
+Los tests e2e no limpian la tabla entre ejecuciones (no hay una librería
+de tests transaccionales instalada todavía): cada test que crea una
+entidad genera su propio id nuevo (aleatorio) para no chocar con datos de
+ejecuciones anteriores, en vez de asumir una tabla vacía.

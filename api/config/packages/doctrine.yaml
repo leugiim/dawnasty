@@ -24,12 +24,12 @@ doctrine:
                 dir: '%kernel.project_dir%/src/Player/Infrastructure/Doctrine/Mapping'
                 prefix: 'App\Player\Domain'
                 alias: Player
-
-when@test:
-    doctrine:
-        dbal:
-            # "TEST_TOKEN" is typically set by ParaTest
-            dbname_suffix: '_test%env(default::TEST_TOKEN)%'
+            Village:
+                type: xml
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/Village/Infrastructure/Doctrine/Mapping'
+                prefix: 'App\Village\Domain'
+                alias: Village
 
 when@prod:
     doctrine:

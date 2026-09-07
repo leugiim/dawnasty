@@ -19,10 +19,13 @@ Cómo leer esto:
 
 ### Módulo `Village` — el núcleo del juego
 
-- [ ] Aggregate `Village`: capacidad de vivienda, población (total y
+- [x] Aggregate `Village`: capacidad de vivienda, población (total y
       desempleados), stock de recursos, edificios construidos
       (tipo + nivel), timestamp del último cálculo de producción.
-- [ ] Comando `FoundVillage` (id v7 generado en frontend) → evento
+      Primera vuelta: solo el Edificio Principal se construye al fundar
+      (`housingCapacity()` placeholder a 0 hasta que exista la Casa —
+      módulo `Building` más abajo).
+- [x] Comando `FoundVillage` (id v7 generado en frontend) → evento
       `VillageFounded`.
 - [ ] Cálculo de **progreso offline** al leer una Village: producción
       acumulada desde `lastCalculatedAt` hasta ahora, aplicando el
@@ -38,7 +41,7 @@ Cómo leer esto:
       oficio, o de vuelta a desempleado).
 - [ ] Comando `UpgradeBuilding` (consume recursos según el catálogo, sube
       de nivel un edificio construido).
-- [ ] Query `GetVillage` → snapshot completo (recursos, población,
+- [x] Query `GetVillage` → snapshot completo (recursos, población,
       edificios, nivel/nombre del Edificio Principal, etapa derivada de su
       nivel).
 
