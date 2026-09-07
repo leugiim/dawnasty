@@ -54,7 +54,11 @@ Cómo leer esto:
       Principal) para tener el loop completo funcionando; el resto del
       catálogo se amplía después. `BuildingType` vive en este módulo (antes
       estaba en `Village`, que lo referencia como vocabulario compartido —
-      docs/architecture.md, sección 1.1).
+      docs/architecture.md, sección 1.1). Cada tipo de edificio es una
+      clase propia en `Domain/Catalog/` (`MainBuilding`, `House`, `Farm`)
+      que implementa el Factory Method `BuildingDefinitionFactory`; añadir
+      un edificio nuevo es una clase nueva ahí + registrarla en
+      `BuildingCatalog`, sin tocar las demás.
 - [x] Query de catálogo (para que el frontend sepa qué se puede construir y
       a qué coste antes de intentarlo). `GET /api/buildings/catalog`.
 
