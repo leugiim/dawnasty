@@ -22,9 +22,10 @@ Cómo leer esto:
 - [x] Aggregate `Village`: capacidad de vivienda, población (total y
       desempleados), stock de recursos, edificios construidos
       (tipo + nivel), timestamp del último cálculo de producción.
-      Primera vuelta: solo el Edificio Principal se construye al fundar
-      (`housingCapacity()` placeholder a 0 hasta que exista la Casa —
-      módulo `Building` más abajo).
+      Primera vuelta: solo el Edificio Principal se construye al fundar;
+      `housingCapacity()` da una capacidad base placeholder (10) sin sumar
+      nada por Casas hasta que existan como edificio construible — módulo
+      `Building` más abajo.
 - [x] Comando `FoundVillage` (id v7 generado en frontend) → evento
       `VillageFounded`.
 - [ ] Cálculo de **progreso offline** al leer una Village: producción
