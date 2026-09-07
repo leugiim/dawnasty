@@ -48,13 +48,20 @@ Cómo leer esto:
 
 ### Módulo `Building` — catálogo de edificios
 
-- [ ] Definición de tipos de edificio + tabla de niveles (coste/efecto por
+- [x] Definición de tipos de edificio + tabla de niveles (coste/efecto por
       nivel), incluida la categoría "productor de comida" (game-design.md
       4.3). Placeholder inicial: solo 2-3 edificios (Casa, Granja, Edificio
       Principal) para tener el loop completo funcionando; el resto del
-      catálogo se amplía después.
-- [ ] Query de catálogo (para que el frontend sepa qué se puede construir y
-      a qué coste antes de intentarlo).
+      catálogo se amplía después. `BuildingType` vive en este módulo (antes
+      estaba en `Village`, que lo referencia como vocabulario compartido —
+      docs/architecture.md, sección 1.1).
+- [x] Query de catálogo (para que el frontend sepa qué se puede construir y
+      a qué coste antes de intentarlo). `GET /api/buildings/catalog`.
+
+**Pendiente para que esto sirva de algo en la práctica**: el catálogo
+todavía no está enchufado a ninguna `Village` — hace falta `UpgradeBuilding`
+(módulo `Village`, más arriba) para que una aldea pueda construir su
+primera Casa/Granja consultando estos costes.
 
 ### Módulo `Prestige`
 
