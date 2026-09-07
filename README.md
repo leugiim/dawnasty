@@ -38,6 +38,12 @@ php bin/console make:migration               # generar migración
 php bin/console doctrine:migrations:migrate   # aplicar migraciones pendientes
 ```
 
+Tests (unitarios + e2e, ver [`api/docs/architecture.md`](api/docs/architecture.md#9-tests)):
+
+```bash
+composer test   # migra var/test.db (BD de test, separada de la de dev) y corre bin/phpunit
+```
+
 ## app/ — SvelteKit
 
 Frontend SPA. SvelteKit + TypeScript, ESLint + Prettier, `adapter-auto`.
