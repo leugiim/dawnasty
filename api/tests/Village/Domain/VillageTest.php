@@ -48,13 +48,13 @@ final class VillageTest extends TestCase
         self::assertSame(0, $village->populationUnemployed());
     }
 
-    public function test_housing_capacity_is_zero_without_a_house_built(): void
+    public function test_housing_capacity_has_a_base_value_without_a_house_built(): void
     {
         // Placeholder mientras no exista un edificio de vivienda construible
         // (ver Village::housingCapacity()).
         $village = Village::found(VillageId::fromString(self::VILLAGE_ID), new \DateTimeImmutable());
 
-        self::assertSame(0, $village->housingCapacity());
+        self::assertSame(10, $village->housingCapacity());
     }
 
     public function test_found_stage_is_aldea_at_main_building_level_1(): void

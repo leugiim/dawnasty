@@ -24,6 +24,14 @@ final class Village
     use RecordsDomainEvents;
 
     /**
+     * Capacidad de vivienda base, sin ninguna Casa construida (game-design.md,
+     * 4.1). Valor placeholder pendiente de balance real, igual que el resto
+     * de números del módulo Building — evita que una aldea recién fundada se
+     * quede sin poder recibir ni un aldeano hasta construir la primera Casa.
+     */
+    private const BASE_HOUSING_CAPACITY = 10;
+
+    /**
      * @param array<string, int> $buildings tipo de edificio (BuildingType::value) => nivel
      * @param array<string, int> $resources tipo de recurso (ResourceType::value) => cantidad
      */
@@ -101,15 +109,15 @@ final class Village
     }
 
     /**
-     * Placeholder: siempre 0 hasta que exista un edificio de vivienda
-     * construible (Casa, pendiente del módulo Building / UpgradeBuilding —
-     * docs/tasks.md, "Orden sugerido" paso 5). game-design.md 4.1 dice que
-     * la vivienda la dan las Casas; con solo el Edificio Principal
-     * construido, la capacidad real es 0.
+     * Placeholder: de momento siempre BASE_HOUSING_CAPACITY, sin sumar nada
+     * por Casas construidas (pendiente del módulo Building / UpgradeBuilding
+     * — docs/tasks.md, "Orden sugerido" paso 5). game-design.md 4.1 dice que
+     * las Casas dan capacidad de vivienda adicional; hasta que existan como
+     * edificio construible, toda Village parte de esta base.
      */
     public function housingCapacity(): int
     {
-        return 0;
+        return self::BASE_HOUSING_CAPACITY;
     }
 
     public function lastCalculatedAt(): \DateTimeImmutable

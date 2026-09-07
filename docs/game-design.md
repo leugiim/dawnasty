@@ -43,7 +43,10 @@ que hacen la siguiente vuelta más rápida.
 
 ### 4.1 Población y vivienda (cerrado)
 
-- Las **Casas** dan capacidad de vivienda.
+- Las **Casas** dan capacidad de vivienda adicional. Además, toda aldea
+  parte de una **capacidad de vivienda base sin ninguna Casa construida**
+  (valor placeholder: 10), para que una aldea recién fundada ya pueda
+  recibir aldeanos antes de construir la primera.
 - Los aldeanos nuevos los produce específicamente el **Edificio
   Principal** (ver 4.3): de forma pasiva, sin necesitar trabajador
   asignado, a un ritmo que depende de su nivel.

@@ -41,7 +41,7 @@ final class VillageControllerTest extends WebTestCase
         self::assertSame(['main_building' => 1], $data['buildings']);
         self::assertSame(['wood' => 0, 'stone' => 0, 'food' => 0, 'ore' => 0], $data['resources']);
         self::assertSame(
-            ['total' => 0, 'unemployed' => 0, 'housingCapacity' => 0],
+            ['total' => 0, 'unemployed' => 0, 'housingCapacity' => 10],
             $data['population'],
         );
         self::assertArrayHasKey('lastCalculatedAt', $data);

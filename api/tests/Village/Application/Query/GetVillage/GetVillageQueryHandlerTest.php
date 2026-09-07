@@ -34,7 +34,7 @@ final class GetVillageQueryHandlerTest extends TestCase
         self::assertSame('Choza del Fundador', $view->mainBuildingName);
         self::assertSame(1, $view->mainBuildingLevel);
         self::assertSame(0, $view->populationTotal);
-        self::assertSame(0, $view->housingCapacity);
+        self::assertSame(10, $view->housingCapacity);
     }
 
     public function test_it_throws_when_the_village_does_not_exist(): void
