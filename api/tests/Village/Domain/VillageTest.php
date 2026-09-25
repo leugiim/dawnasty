@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Village\Domain;
 
-use App\Village\Domain\BuildingType;
+use App\Building\Domain\BuildingType;
 use App\Village\Domain\Event\VillageFounded;
 use App\Village\Domain\ResourceType;
 use App\Village\Domain\Stage;

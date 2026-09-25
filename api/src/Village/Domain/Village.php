@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Village\Domain;
 
+use App\Building\Domain\BuildingType;
 use App\Village\Domain\Event\VillageFounded;
 use App\_Shared\Domain\Event\RecordsDomainEvents;
 
@@ -110,10 +111,12 @@ final class Village
 
     /**
      * Placeholder: de momento siempre BASE_HOUSING_CAPACITY, sin sumar nada
-     * por Casas construidas (pendiente del módulo Building / UpgradeBuilding
-     * — docs/tasks.md, "Orden sugerido" paso 5). game-design.md 4.1 dice que
-     * las Casas dan capacidad de vivienda adicional; hasta que existan como
-     * edificio construible, toda Village parte de esta base.
+     * por Casas construidas — el catálogo (módulo Building) ya sabe qué
+     * capacidad da cada nivel de Casa, pero todavía no existe el comando
+     * UpgradeBuilding que la construya sobre una Village (docs/tasks.md,
+     * módulo Village). game-design.md 4.1 dice que las Casas dan capacidad
+     * de vivienda adicional; hasta que se puedan construir, toda Village
+     * parte de esta base.
      */
     public function housingCapacity(): int
     {
